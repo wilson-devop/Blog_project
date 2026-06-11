@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ post.title }}</title>
+</head>
+<body>
+
+    <h1>{{ post.title }}</h1>
+
+    <p>{{ post.content }}</p>
+
+    <p>
+        Created:
+        {{ post.created_at }}
+        <p>
+    <a href="{% url 'edit_post' post.id %}">
+        Edit Post
+        <p>
+    <a href="{% url 'delete_post' post.id %}">
+        Delete Post
+    </a>
+</p>
+    </a>
+</p>
+    </p>
+
+    <a href="/">Back to Home</a>
+
+</body>
+</html>
