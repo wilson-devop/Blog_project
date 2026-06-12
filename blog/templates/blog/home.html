@@ -1,29 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Blog</title>
-</head>
-<body>
-    <a href="{% url 'create_post' %}">
-    Create New Post
-</a>
 
-<hr>
+{% extends 'blog/base.html' %}
 
-    <h1>My Blog</h1>
+{% block content %}
+
+<div class="container">
+
+    <h1>My Blog Site <br>where you share your thoughts</h1>
 
     {% for post in posts %}
-    <h2></h2>
-    <a href="{% url 'post_detail' post.id %}">
-        {{ post.title }}
-    </a>
-   </h2>
 
-        <p>{{ post.content }}</p>
 
-        <hr>
+        <div class="card">
+
+            <h2>
+                <a href="{% url 'post_detail' post.id %}">
+                    {{ post.title }}
+                </a>
+            </h2>
+
+            <p>By {{ post.author.username }}</p>
+
+            <p>{{ post.content }}</p>
+
+        </div>
+
+    {% empty %}
+
+        <p>No posts available yet.</p>
 
     {% endfor %}
 
-</body>
-</html>
+</div>
+
+{% endblock %}

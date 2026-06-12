@@ -1,7 +1,10 @@
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from .models import Post   
 from .forms import PostForm
 from django.shortcuts import render, redirect, get_object_or_404 
+from django.contrib import messages
 
 # Create your views here.
 def home(request):
@@ -18,12 +21,16 @@ def post_detail(request, post_id):
     )          
     
 
+@login_required
 def create_post(request):
 
     if request.method == "POST":
         form = PostForm(request.POST)
 
         if form.is_valid():
+            post = form.save(commit=False)
+
+            post.author = request.user
             form.save()
             return redirect('home')
 
@@ -36,9 +43,14 @@ def create_post(request):
         {'form': form}
     )
 
+@login_required
 def edit_post(request, post_id):
 
     post = get_object_or_404(Post, id=post_id)
+
+
+    if post.author != request.user:
+        return HttpResponse("You are not allowed to edit this post.")
 
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
@@ -58,9 +70,12 @@ def edit_post(request, post_id):
             'post': post
         }
     )
+@login_required
 def delete_post(request, post_id):
 
     post = get_object_or_404(Post, id=post_id)
+    if post.author != request.user:
+        return HttpResponse("You are not allowed to delete this post.")
 
     if request.method == "POST":
         post.delete()
